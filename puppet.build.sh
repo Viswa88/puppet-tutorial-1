@@ -25,6 +25,9 @@ do
     docker kill -s HUP dnsmasq
     echo "-- Adding to puppet master"
     ssh root@${NODE} -o "StrictHostKeyChecking no" "puppet agent -t"
+    puppet cert sign --all
+    ssh root@${NODE} -o "StrictHostKeyChecking no" "puppet agent -t"
+    ssh root@${NODE} -o "StrictHostKeyChecking no" "echo 'START=yes' > /etc/default/puppet"
+    ssh root@${NODE} -o "StrictHostKeyChecking no" "service puppet start"
 done
 popd
-puppet cert sign --all
