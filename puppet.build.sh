@@ -1,7 +1,7 @@
 #!/bin/bash
 NIC="eth0"
 if [ -z "$CALAVERA_HOME" ]; then
-   CALAVERA_HOME="/data/devops/Calavera"
+   export CALAVERA_HOME="/data/devops/Calavera"
 fi
 name="dnsmasq"
 export MY_IP=$(ifconfig $NIC | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}')
