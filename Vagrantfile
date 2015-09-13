@@ -2,7 +2,7 @@ ENV['VAGRANT_DEFAULT_PROVIDER'] = 'docker'
 MY_IP=ENV['MY_IP']||`ifconfig eth0 | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
 
 Vagrant.configure(2) do |config|
-  config.ssh.private_key_path = File.expand_path("../keys/id_rsa", __FILE__)
+  config.ssh.private_key_path = File.expand_path("../shared/keys/id_rsa", __FILE__)
   config.ssh.username = "root"
   config.vm.provider "docker" do |d|
     d.build_dir = "."
