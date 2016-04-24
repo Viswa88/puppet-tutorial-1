@@ -19,6 +19,19 @@ Vagrant.configure(2) do |config|
 
   config.berkshelf.enabled = false
 
+  config.vm.define "puppetmaster" do | base |
+    base.vm.host_name              ="puppetmaster.calavera.biz"
+    base.vm.network                 "private_network", ip: "192.168.33.29"
+    base.vm.network                 "forwarded_port", guest: 22, host: 2229, auto_correct: true
+
+    base.vm.synced_folder           ".",         "/home/base"
+    base.vm.synced_folder           "./shared", "/mnt/shared"
+    base.vm.provider "docker" do |d|
+      d.name = "puppetmaster"
+      d.build_dir = "./master"
+    end
+  end
+
   config.vm.define "puppet1" do | base |
     base.vm.host_name              ="puppet1.calavera.biz"
     base.vm.network                 "private_network", ip: "192.168.33.29"
@@ -28,6 +41,7 @@ Vagrant.configure(2) do |config|
     base.vm.synced_folder           "./shared", "/mnt/shared"
     base.vm.provider "docker" do |d|
       d.name = "puppet1"
+      d.build_dir = "./slaves"
     end
   end
 
@@ -40,6 +54,7 @@ Vagrant.configure(2) do |config|
     base.vm.synced_folder           "./shared", "/mnt/shared"
     base.vm.provider "docker" do |d|
       d.name = "puppet2"
+      d.build_dir = "./slaves"
     end
 
   end
@@ -52,6 +67,7 @@ Vagrant.configure(2) do |config|
     base.vm.synced_folder           "./shared", "/mnt/shared"
     base.vm.provider "docker" do |d|
       d.name = "puppet3"
+      d.build_dir = "./slaves"
     end
   end
 end

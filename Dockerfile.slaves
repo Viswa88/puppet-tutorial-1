@@ -1,0 +1,10 @@
+FROM phusion/baseimage:0.9.16
+
+ 
+RUN rm -f /etc/service/sshd/down
+CMD ["/sbin/my_init"]
+RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
+ADD shared/keys /tmp/
+ADD shared/puppetlabs-release-trusty.deb /tmp/
+ADD puppet.conf /etc/puppet/
+RUN chmod a+r /tmp/id_rsa* ; cat /tmp/id_rsa.pub >> /root/.ssh/authorized_keys ; cp /tmp/id_rsa* /root/.ssh/ ; groupadd vagrant ; useradd -g vagrant -m -G adm vagrant ; sudo -u vagrant mkdir /home/vagrant/.ssh ; sudo -u vagrant cp /tmp/id_rsa* /home/vagrant/.ssh/ ; sudo -u vagrant chmod go-rwx /home/vagrant/.ssh/* ; sudo -u vagrant cat /tmp/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys ; rm /tmp/id_rsa* ; chown -R vagrant:vagrant /home/vagrant ; dpkg -i /tmp/puppetlabs-release-trusty.deb ; apt-get update ; apt-get -y install puppet ; apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
